@@ -28,11 +28,14 @@ sde                         8:64   0    1G  0 disk
 
 1.Уменьшить том под / до 8G.
 Подготовка тома
+
  1.1 root@lvm:/home/vagrant# vgcreate vg_root /dev/sdb
   Physical volume "/dev/sdb" successfully created.
   Volume group "vg_root" successfully created
+	
  1.2 root@lvm:/home/vagrant# lvcreate -n lv_root -l +100%FREE /dev/vg_root
   Logical volume "lv_root" created.
+	
  1.3 root@lvm:/home/vagrant# lvcreate -n lv_root -l +100%FREE /dev/vg_root
   Calculated size of logical volume is 0 extents. Needs to be larger.
 Создание/монтирование файловой системы
