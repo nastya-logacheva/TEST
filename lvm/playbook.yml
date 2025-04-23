@@ -1,0 +1,61 @@
+- name: Настройка LVM и монтирование томов
+  hosts: lvm
+  become: true
+  tasks:
+
+    - name: Создание физических томов
+      command: pvcreate /dev/sdb /dev/sdc /dev/sdd /dev/sde
+      ignore_errors: true
+
+    - name: Создание группы томов для /var
+      command: vgcreate vg_var /dev/sdc /dev/sdd
+      ignore_errors: true
+
+    - name: Создание зеркального тома для /var
+      command: lvcreate -L 950M -m1 -n lv_var vg_var
+      ignore_errors: true
+
+    - name: Создание файловой системы ext4 на /var
+      filesystem:
+        fstype: ext4
+        dev: /dev/vg_var/lv_var
+
+    - name: Монтирование /var
+      mount:
+        path: /var
+        src: /dev/vg_var/lv_var
+        fstype: ext4
+        state: mounted
+
+    - name: Добавление записи в fstab для /var
+      mount:
+        path: /var
+        src: /dev/vg_var/lv_var
+        fstype: ext4
+        opts: defaults
+        state: present
+
+    - name: Создание тома для /home
+      command: lvcreate -n LogVol_Home -L 2G ubuntu-vg
+      ignore_errors: true
+
+    - name: Создание файловой системы ext4 на /home
+      filesystem:
+        fstype: ext4
+        dev: /dev/ubuntu-vg/LogVol_Home
+      ignore_errors: true
+
+    - name: Монтирование /home
+      mount:
+        path: /home
+        src: /dev/ubuntu-vg/LogVol_Home
+        fstype: ext4
+        state: mounted
+
+    - name: Добавление записи в fstab для /home
+      mount:
+        path: /home
+        src: /dev/ubuntu-vg/LogVol_Home
+        fstype: ext4
+        opts: defaults
+        state: present
