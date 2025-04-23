@@ -1,27 +1,44 @@
 #Заголовок
 
 Тестовый стенд:
+
 ОС: Ubuntu 22.04 (generic/ubuntu2204)
+
 CPU: 2
+
 RAM: 2048 MB
+
 Диски:
+
 /dev/sdb - 10G
 /dev/sdc - 2G
 /dev/sdd - 1G
 /dev/sde - 1G
 
 0. Проверка дисков 
+
 vagrant@lvm:~$ lsblk
+
 NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+
 loop1                       7:1    0 53.3M  1 loop 
+
 sda                         8:0    0  128G  0 disk 
+
 ├─sda1                      8:1    0    1M  0 part 
+
 ├─sda2                      8:2    0    2G  0 part /boot
+
 └─sda3                      8:3    0  126G  0 part 
+
   └─ubuntu--vg-ubuntu--lv 253:0    0   63G  0 lvm  /
+
 sdb                         8:16   0   10G  0 disk 
+
 sdc                         8:32   0    2G  0 disk 
+
 sdd                         8:48   0    1G  0 disk 
+
 sde                         8:64   0    1G  0 disk 
 
 
@@ -38,18 +55,31 @@ sde                         8:64   0    1G  0 disk
 	
  1.3 root@lvm:/home/vagrant# lvcreate -n lv_root -l +100%FREE /dev/vg_root
   Calculated size of logical volume is 0 extents. Needs to be larger.
+
 Создание/монтирование файловой системы
+
  1.4 root@lvm:/home/vagrant# mkfs.ext4 /dev/vg_root/lv_root
+
 mke2fs 1.46.5 (30-Dec-2021)
+
 Creating filesystem with 2620416 4k blocks and 655360 inodes
+
 Filesystem UUID: f4b5629d-0dbc-493b-8275-e1ee230b8011
+
 Superblock backups stored on blocks: 
-	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+ 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+ 
  1.5 mount /dev/vg_root/lv_root /mnt
+
 Копируем все данные 
+
  1.6 rsync -avxHAX --progress / /mnt/
+
 Проверяем 
+
  1.7 root@lvm:/home/vagrant# ls /mnt
+
 bin   dev  home  lib32  libx32      media  opt   root  sbin  srv       sys  usr
 boot  etc  lib   lib64  lost+found  mnt    proc  run   snap  swap.img  tmp  var
 Имитируем root, создаем в него chroot и обновляем grub
