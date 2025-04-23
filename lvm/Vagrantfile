@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+  :lvm => {
+        :box_name => "generic/ubuntu2204",
+        :vm_name => "lvm",
+        :net => [
+           ["192.168.11.150",  2, "255.255.255.0", "mynet"],
+        ],
+        :disks => {
+          :disk1 => { size: "10240", port: 1 },
+          :disk2 => { size: "2048",  port: 2 },
+          :disk3 => { size: "1024",  port: 3 },
+          :disk4 => { size: "1024",  port: 4 },
+        }
+  }
+}
+
+Vagrant.configure("2") do |config|
+  MACHINES.each do |boxname, boxconfig|
+    config.vm.define boxname do |box|
+      box.vm.box = boxconfig[:box_name]
+      box.vm.hostname = boxconfig[:vm_name]
+
+      box.vm.provider :virtualbox do |vb|
+        vb.name = boxconfig[:vm_name]
+        vb.cpus = 2
+        vb.memory = 2048
+      end
+
+      boxconfig[:net].each do |ip, netid, mask, name|
+        box.vm.network :private_network, ip: ip, virtualbox__intnet: true
+      end
+
+      boxconfig[:disks].each do |name, opts|
+        box.vm.provider :virtualbox do |vb|
+          vb.customize ['createhd', '--filename', "#{name}", '--size', opts[:size]]
+          vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', opts[:port], '--device', 0, '--type', 'hdd', '--medium', "#{name}.vdi"]
+        end
+      end
+    end
+  end
+end
