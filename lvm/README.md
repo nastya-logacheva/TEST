@@ -17,7 +17,7 @@ RAM: 2048 MB
 
 ## Выполнение работы:
 
-##### 0. Проверка дисков 
+#### 0. Проверка дисков 
 
 vagrant@lvm:~$ lsblk
 
@@ -45,7 +45,7 @@ sde                         8:64   0    1G  0 disk
 
 
 
-###### 1.Уменьшить том под / до 8G.
+#### 1.Уменьшить том под / до 8G.
 Подготовка тома
 
  1.1 root@lvm:/home/vagrant# vgcreate vg_root /dev/sdb
@@ -178,7 +178,7 @@ update-initramfs: Generating /boot/initrd.img-5.15.0-91-generic
 
 W: Couldn't identify type of root file system for fsck hook
 
-###### 2. Выделить том под /var - сделать в mirror.
+#### 2. Выделить том под /var - сделать в mirror.
 На свободных дисках создаем зеркало:
 
  2.1 root@lvm:/# pvcreate /dev/sdc /dev/sdd
@@ -230,7 +230,7 @@ W: Couldn't identify type of root file system for fsck hook
  
  2.13 root@lvm:/# pvremove /dev/sdb
  
-###### 3. Выделить том под /home.
+#### 3. Выделить том под /home.
 Выделяем топ под /home 
  
  3.1 root@lvm:/#  lvcreate -n LogVol_Home -L 2G /dev/ubuntu-vg
@@ -249,16 +249,16 @@ W: Couldn't identify type of root file system for fsck hook
  
  3.8 root@lvm:/# mount /dev/ubuntu-vg/LogVol_Home /home/
 
-###### 4. /home - сделать том для снапшотов.
+#### 4. /home - сделать том для снапшотов.
 Генерируем файлы в /home
 
 root@lvm:/# touch /home/file{1..20}
 
-###### 5. Прописать монтирование в fstab. Попробовать с разными опциями и разными файловыми системами (на выбор).
+#### 5. Прописать монтирование в fstab. Попробовать с разными опциями и разными файловыми системами (на выбор).
 
 root@lvm:/# echo "`blkid | grep Home | awk '{print $2}'` /home xfs defaults 0 0" >> /etc/fstab
 
-###### 6. Работа со снапшотами:
+#### 6. Работа со снапшотами:
 а) Генерируем файлы в /home
 
 root@lvm:/# touch /home/file{1..20}
