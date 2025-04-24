@@ -45,20 +45,35 @@ RAM: 2048 MB
 
 ### 0. Проверка дисков
 vagrant@zfs:~$ lsblk
+
 NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+
 loop2                       7:2    0 53.3M  1 loop 
+
 sda                         8:0    0  128G  0 disk 
+
 ├─sda1                      8:1    0    1M  0 part 
+
 ├─sda2                      8:2    0    2G  0 part /boot
+
 └─sda3                      8:3    0  126G  0 part 
+
   └─ubuntu--vg-ubuntu--lv 253:0    0   63G  0 lvm  /
+
 sdb                         8:16   0  512M  0 disk 
+
 sdc                         8:32   0  512M  0 disk 
+
 sdd                         8:48   0  512M  0 disk 
+
 sde                         8:64   0  512M  0 disk 
+
 sdf                         8:80   0  512M  0 disk 
+
 sdg                         8:96   0  512M  0 disk 
+
 sdh                         8:112  0  512M  0 disk 
+
 sdi                         8:128  0  512M  0 disk 
 
 ### 1. Определение алгоритма с наилучшим сжатием
@@ -331,7 +346,7 @@ otus  capacity                       0%                             -
 
 otus  altroot                        -                              default
 
----------
+-
 
 otus  feature@device_rebuild         disabled                       local
 
