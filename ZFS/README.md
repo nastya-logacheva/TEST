@@ -116,15 +116,15 @@ root@zfs:~# zpool status
 
 config:
 
-	NAME        STATE     READ WRITE CKSUM
+NAME        STATE     READ WRITE CKSUM
 
-  otus1       ONLINE       0     0     0
+otus1       ONLINE       0     0     0
 
-    mirror-0  ONLINE       0     0     0
+mirror-0  ONLINE       0     0     0
 	
-      sdb     ONLINE       0     0     0
+sdb     ONLINE       0     0     0
 	  
-      sdc     ONLINE       0     0     0
+sdc     ONLINE       0     0     0
 
 errors: No known data errors
 
@@ -135,15 +135,15 @@ errors: No known data errors
 
 config:
 
-	NAME        STATE     READ WRITE CKSUM
+NAME        STATE     READ WRITE CKSUM
 
- otus2       ONLINE       0     0     0
+otus2       ONLINE       0     0     0
 
-   mirror-0  ONLINE       0     0     0
+mirror-0  ONLINE       0     0     0
 	
-     sdd     ONLINE       0     0     0
+sdd     ONLINE       0     0     0
 	  
-     sde     ONLINE       0     0     0
+sde     ONLINE       0     0     0
 
 
 errors: No known data errors
@@ -152,11 +152,11 @@ errors: No known data errors
  state: ONLINE
 config:
 
-	NAME        STATE     READ WRITE CKSUM
-	otus3       ONLINE       0     0     0
-	  mirror-0  ONLINE       0     0     0
-	    sdf     ONLINE       0     0     0
-	    sdg     ONLINE       0     0     0
+NAME        STATE     READ WRITE CKSUM
+otus3       ONLINE       0     0     0
+mirror-0  ONLINE       0     0     0
+sdf     ONLINE       0     0     0
+sdg     ONLINE       0     0     0
 
 errors: No known data errors
 
