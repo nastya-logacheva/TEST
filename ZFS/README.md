@@ -166,15 +166,15 @@ errors: No known data errors
 
 config:
 
-	NAME        STATE     READ WRITE CKSUM
+NAME        STATE     READ WRITE CKSUM
 
- otus4       ONLINE       0     0     0
+otus4       ONLINE       0     0     0
 
-   mirror-0  ONLINE       0     0     0
+mirror-0  ONLINE       0     0     0
 	
-     sdh     ONLINE       0     0     0
+sdh     ONLINE       0     0     0
 	  
-     sdi     ONLINE       0     0     0
+sdi     ONLINE       0     0     0
 
 errors: No known data errors
 
