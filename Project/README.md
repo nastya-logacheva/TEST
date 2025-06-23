@@ -72,8 +72,7 @@ https://192.168.56.10/feedback.php
 - Данные сохраняются в таблицу `feedback` в базе данных PostgreSQL
 - Проверка:
 ```sql
-psql -h 192.168.56.13 -U postgres -d feedback
-SELECT * FROM feedback;
+psql -h 192.168.56.13 -U postgres -d feedback SELECT * FROM feedback;
 ```
 
 ---
