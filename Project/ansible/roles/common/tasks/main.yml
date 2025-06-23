@@ -1,10 +1,10 @@
-- name: Install base packages
+- name: Установка пакетов
   become: true
   apt:
     name: [vim, wget, curl, rsyslog]
     state: present
     update_cache: yes
-- name: Install Apache and PHP
+- name: Установка Apache и PHP
   become: true
   apt:
     name:
@@ -12,13 +12,13 @@
       - php
     state: present
     update_cache: yes
-- name: Install msmtp
+- name: Установка msmtp
   become: true
   apt:
     name: msmtp
     state: present
 
-- name: Copy form files
+- name: Копирование файлов формы
   copy:
     src: files/
     dest: /var/www/html/
@@ -27,7 +27,7 @@
     mode: '0644'
   when: inventory_hostname == 'web1'
   
-- name: Copy sendmail.php only to web1
+- name: Копия sendmail.php только на web1
   copy:
     src: sendmail.php
     dest: /var/www/html/sendmail.php
@@ -37,7 +37,7 @@
   when: inventory_hostname == 'web1'
   become: true
 
-- name: Ensure Apache is running
+- name: Проверка запуска Apache
   service:
     name: apache2
     state: started
