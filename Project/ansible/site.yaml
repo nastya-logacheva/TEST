@@ -1,7 +1,0 @@
-- hosts: all:!mon1
-  roles:
-    - rsyslog_client
-
-- hosts: mon1
-  roles:
-    - rsyslog_server

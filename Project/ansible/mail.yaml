@@ -1,4 +1,0 @@
-- hosts: mail
-  become: true
-  roles:
-    - mailrelay

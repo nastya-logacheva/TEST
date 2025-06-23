@@ -1,5 +1,0 @@
-- name: Настройка master и slave серверов PostgreSQL
-  hosts: postgresql_master:postgresql_slave
-  become: true
-  roles:
-    - postgresql

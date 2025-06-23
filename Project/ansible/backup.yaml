@@ -1,5 +1,0 @@
-- name: Настройка ежедневного резервного копирования
-  hosts: db1
-  become: true
-  roles:
-    - backup
