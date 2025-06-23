@@ -1,18 +1,21 @@
-- name: Install Apache and PHP
+- name: Установка Apache и PHP
   apt:
     name: [apache2, php]
     state: present
     update_cache: yes
-- name: Copy form files
+    
+- name: Копирование файлов
   copy:
     src: files/
     dest: /var/www/html/
-- name: Start Apache
+    
+- name: Запуск Apache
   service:
     name: apache2
     enabled: yes
     state: started
-- name: Ensure sendmail_path is set to msmtp in php.ini
+    
+- name: Проверка данных
   lineinfile:
     path: /etc/php/7.4/apache2/php.ini
     regexp: '^;?sendmail_path\s*=.*'
