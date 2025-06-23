@@ -1,4 +1,4 @@
-- name: Setup backup script
+- name: Установка скрипта резервного копирования
   copy:
     dest: /usr/local/bin/backup.sh
     content: |
@@ -6,7 +6,7 @@
       tar czf /backup/web-$(date +%F).tar.gz /var/www/html
     mode: '0755'
     
-- name: Ensure backup directory exists
+- name: Проверка каталога
   file:
     path: /var/backups/pgsql
     state: directory
@@ -14,7 +14,7 @@
     group: postgres
     mode: '0755'
 
-- name: Create database backup script
+- name: Установка скрипта резервного копирования базы данных
   copy:
     dest: /usr/local/bin/pg_backup.sh
     content: |
@@ -22,7 +22,7 @@
       su - postgres -c "pg_dump feedback > /var/backups/pgsql/feedback_$(date +%F).sql"
     mode: '0755'
 
-- name: Create cron job for daily backups
+- name: Создание задания для ежедневного копирования 
   cron:
     name: "Daily PostgreSQL backup"
     user: root
