@@ -1,15 +1,15 @@
-- name: Install msmtp
+- name: Установка msmtp
   apt:
     name: msmtp
     state: present
     update_cache: yes
     
-- name: Configure mail relay
+- name: Настройка почты
   template:
     src: msmtprc.j2
     dest: /etc/msmtprc
     
-- name: Deploy msmtp config
+- name: Настройка конфигурации msmtp
   template:
     src: templates/msmtprc.j2
     dest: /etc/msmtprc
