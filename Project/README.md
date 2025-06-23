@@ -66,14 +66,34 @@ https://192.168.56.10/feedback.php
 
 ---
 
-##  Проверка отправки сообщений
+##  Основная инфраструктура в DMZ зоне
+-Реализована DMZ зона - изолированный сегмент сети.
+-Для каждой ВМ открыты только необходимые порты.
+-Доступ пользователя только на сервисы, которые предполагаются для использования клиентом. 
+-Проверка: 
+```bash
+vagrant@mail1:~$ sudo ufw status
+```
+
+
+---
+
+##  Проверка отправки сообщений на почту + БД
 
 - Сообщение отправляется на email через SMTP
 - Данные сохраняются в таблицу `feedback` в базе данных PostgreSQL
+- На ВМ db1(master) создается база feedback и таблица с правами на репликацию
+- На ВМ db2(slave) выполняется pg_basebackup для создания копий данных 
 - Проверка:
 ```sql
-psql -h 192.168.56.13 -U postgres -d feedback SELECT * FROM feedback;
+db1
+sudo -u postgres psql -d feedback -c "SELECT * FROM feedback;"
+db2
+sudo -u postgres psql
+\c feedback
+SELECT * FROM feedback;
 ```
+
 
 ---
 
@@ -125,20 +145,3 @@ ansible-playbook -i hosts backup.yaml
 ##  Автор
 
 **Анастасия Логачева** 
-
-
- ls -l /etc/msmtprc  - должен быть не рут
- sudo chown www-data:www-data /etc/msmtprc
-sudo chmod 600 /etc/msmtprc
-
-sudo systemctl restart apache2
-vagrant@mon1:~$ php -m | grep pgsql
-pdo_pgsql
-pgsql
-vagrant@mon1:~$ sudo chown www-data:www-data /etc/msmtprc
-vagrant@mon1:~$ sudo chmod 600 /etc/msmtprc
-vagrant@mon1:~$ sudo -u www-data msmtp -a default nastiasunkiss@gmail.com < /dev/null
-
-+логирование vagrant@web1:~$ logger "test"
-sudo tail -f /var/log/client_logs.log 
-sudo /usr/local/bin/pg_backup.sh
