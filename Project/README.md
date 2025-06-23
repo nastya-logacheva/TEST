@@ -29,24 +29,30 @@
 
 ##  Развёртывание
 
-1. **Клонируйте репозиторий**
+1. **Клонирование репозитория**
 ```bash
 git clone ...
-cd project_feedback_form_ubuntu20_final
+cd Project
 ```
 
-2. **Поднимите виртуальные машины**
+2. **Запуск виртуальных машин**
 ```bash
 vagrant up
 ```
 
 3. **Примените Ansible-плейбуки**
+   # прежде, чем применить плейбуки, требуется, настроить файл msmtprc.j2 в /templates
+
 ```bash
 cd ansible
-ansible-playbook -i inventory/hosts app.yaml
-ansible-playbook -i inventory/hosts postgresql.yaml
-ansible-playbook -i inventory/hosts monitoring.yaml
-ansible-playbook -i inventory/hosts backup.yaml
+ansible-playbook -i hosts app.yaml
+ansible-playbook -i hosts mail.yaml
+ansible-playbook -i hosts monitoring.yaml
+ansible-playbook -i hosts postgresql.yaml
+ansible-playbook -i hosts backup.yaml
+ansible-playbook -i hosts site.yaml
+
+
 ```
 
 ---
@@ -72,12 +78,17 @@ SELECT * FROM feedback;
 
 ---
 
-##  Мониторинг
+##  Мониторинг + Алертинг
 
 - Prometheus доступен: http://192.168.56.12:9090
 - Alertmanager: http://192.168.56.12:9093
 - Метрики собираются со всех хостов через node_exporter
-
+- Проверка алерта
+```bash
+vagrant@mail1:~$ sudo systemctl stop node_exporter
+wait 1 min
+vagrant@mail1:~$ sudo systemctl start node_exporter
+```
 ---
 
 ##  Логирование
@@ -85,7 +96,8 @@ SELECT * FROM feedback;
 - Все клиенты отправляют логи на `mon1`
 - Просмотр логов:  
 ```bash
-sudo cat /var/log/client_logs.log
+mon1: sudo cat /var/log/client_logs.log
+other vm: logger "TEST"
 ```
 
 ---
@@ -94,6 +106,8 @@ sudo cat /var/log/client_logs.log
 
 - Ежедневно по cron создаётся архив `/var/backups/postgresql_backup.tar.gz`
 - Содержимое: /var/lib/postgresql
+- Запуск вручную: /usr/local/bin/pg_backup.sh 
+- Проверка всех копий: ls /var/backups/pgsql
 
 ---
 
@@ -103,7 +117,8 @@ sudo cat /var/log/client_logs.log
 ```bash
 vagrant destroy db2
 vagrant up db2
-ansible-playbook -i inventory/hosts postgresql.yaml
+ansible-playbook -i hosts postgresql.yaml
+ansible-playbook -i hosts backup.yaml
 ```
 
 ---
@@ -112,14 +127,6 @@ ansible-playbook -i inventory/hosts postgresql.yaml
 
 **Анастасия Логачева** 
 
-
-
-+добавить пункт, где нужно ввести пароль
-УДАЛИТЬ ПАРОЛЬ
-+ установка sudo apt install msmtp -y - вроде бы ок 
-+ файл feedback.php - вроде бы ок
-+ проверка алерта vagrant@mail1:~$ sudo systemctl stop node_exporter
-vagrant@mail1:~$ sudo systemctl start node_exporter
 
  ls -l /etc/msmtprc  - должен быть не рут
  sudo chown www-data:www-data /etc/msmtprc
