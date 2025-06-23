@@ -1,24 +1,24 @@
 
-- name: Create prometheus user
+- name: Создание пользователя prometheus
   user:
     name: prometheus
     shell: /usr/sbin/nologin
   become: true
 
-- name: Download Prometheus
+- name: Скачивание Prometheus
   get_url:
     url: https://github.com/prometheus/prometheus/releases/download/v2.51.1/prometheus-2.51.1.linux-amd64.tar.gz
     dest: /tmp/prometheus.tar.gz
   become: true
 
-- name: Extract Prometheus
+- name: Распаковка Prometheus
   unarchive:
     src: /tmp/prometheus.tar.gz
     dest: /opt/
     remote_src: yes
   become: true
 
-- name: Create symlink to Prometheus binary
+- name: Создать каталог для Prometheus
   file:
     src: /opt/prometheus-2.51.1.linux-amd64/prometheus
     dest: /usr/local/bin/prometheus
@@ -26,7 +26,7 @@
     mode: '0755'
   become: true
 
-- name: Copy Prometheus config (template)
+- name: Скопировать файлы Prometheus
   template:
     src: prometheus.yml.j2
     dest: /opt/prometheus-2.51.1.linux-amd64/prometheus.yml
@@ -36,14 +36,14 @@
   notify: restart prometheus
   become: true
 
-- name: Copy Prometheus systemd unit file
+- name: Копия файлов systemd для Prometheus
   copy:
     src: prometheus.service
     dest: /etc/systemd/system/prometheus.service
     mode: '0644'
   become: true
 
-- name: Create node_exporter user
+- name: Создание пользователя node_exporter
   become: true
   ansible.builtin.user:
     name: node_exporter
@@ -51,24 +51,24 @@
     system: yes
     create_home: no
     
-- name: Allow port 9100 for node_exporter (fallback)
+- name: Разрешить порт 9100 для node_exporter
   become: true
   ansible.builtin.command: ufw allow 9100/tcp
   
-- name: Download node_exporter
+- name: Скачивание node_exporter
   get_url:
     url: https://github.com/prometheus/node_exporter/releases/download/v1.8.1/node_exporter-1.8.1.linux-amd64.tar.gz
     dest: /tmp/node_exporter.tar.gz
   become: true
 
-- name: Extract node_exporter
+- name: Распаковка node_exporter
   unarchive:
     src: /tmp/node_exporter.tar.gz
     dest: /opt/
     remote_src: yes
   become: true
 
-- name: Create symlink to node_exporter binary
+- name: Создать каталог для node_exporter
   file:
     src: /opt/node_exporter-1.8.1.linux-amd64/node_exporter
     dest: /usr/local/bin/node_exporter
@@ -76,7 +76,7 @@
     force: yes
   become: true
 
-- name: Copy node_exporter systemd unit file
+- name: Скопировать файлы node_exporter
   copy:
     src: node_exporter.service
     dest: /etc/systemd/system/node_exporter.service
@@ -84,59 +84,59 @@
   notify: restart node_exporter
   become: true
 
-- name: Reload systemd
+- name: Перезагрузка systemd
   systemd:
     daemon_reload: yes
   become: true
 
-- name: Enable and start Prometheus
+- name: Включение и запуск Prometheus
   systemd:
     name: prometheus
     enabled: true
     state: started
   become: true
 
-- name: Enable and start node_exporter
+- name: Включение и запуск node_exporter
   systemd:
     name: node_exporter
     enabled: true
     state: started
   become: true
   
-- name: Create alertmanager user
+- name: Создание пользователя alertmanager
   user:
     name: alertmanager
     shell: /usr/sbin/nologin
   become: true
 
-- name: Download Alertmanager
+- name: Скачивание Alertmanager
   get_url:
     url: https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz
     dest: /tmp/alertmanager.tar.gz
   become: true
 
-- name: Extract Alertmanager
+- name: Распаковка Alertmanager
   unarchive:
     src: /tmp/alertmanager.tar.gz
     dest: /opt/
     remote_src: yes
   become: true
 
-- name: Create symlink for alertmanager
+- name: Создание каталога для alertmanager
   file:
     src: /opt/alertmanager-0.27.0.linux-amd64/alertmanager
     dest: /usr/local/bin/alertmanager
     state: link
   become: true
 
-- name: Copy Alertmanager config
+- name: Скопировать файлы Alertmanager
   template:
     src: alertmanager.yml.j2
     dest: /opt/alertmanager-0.27.0.linux-amd64/alertmanager.yml
   become: true
   notify: restart alertmanager
 
-- name: Create systemd unit for Alertmanager
+- name: Создать каталог для Alertmanager
   copy:
     src: alertmanager.service
     dest: /etc/systemd/system/alertmanager.service
@@ -145,21 +145,21 @@
     - daemon reload
     - restart alertmanager
 
-- name: Enable and start Alertmanager
+- name: Включение и запуск Alertmanager
   systemd:
     name: alertmanager
     enabled: yes
     state: started
   become: true
    
-- name: Copy Prometheus alert rules
+- name: Добавление правила оповещений
   become: true
   template:
     src: alert.rules.yml.j2
     dest: /opt/prometheus-2.51.1.linux-amd64/alert.rules.yml
   notify: restart prometheus
   
-- name: Ensure data dir exists for Alertmanager
+- name: Проверка существования данных
   file:
     path: /opt/alertmanager-0.27.0.linux-amd64/data
     state: directory
@@ -168,7 +168,7 @@
     mode: '0755'
   become: true
 
-- name: Ensure ownership for all alertmanager files
+- name: Проверка прав 
   file:
     path: /opt/alertmanager-0.27.0.linux-amd64
     state: directory
