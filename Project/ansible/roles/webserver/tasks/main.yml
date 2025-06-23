@@ -1,0 +1,38 @@
+- name: Install Apache and PHP
+  apt:
+    name: [apache2, php]
+    state: present
+    update_cache: yes
+- name: Copy form files
+  copy:
+    src: files/
+    dest: /var/www/html/
+- name: Start Apache
+  service:
+    name: apache2
+    enabled: yes
+    state: started
+- name: Ensure sendmail_path is set to msmtp in php.ini
+  lineinfile:
+    path: /etc/php/7.4/apache2/php.ini
+    regexp: '^;?sendmail_path\s*=.*'
+    line: 'sendmail_path = /usr/bin/msmtp -t'
+    state: present
+  notify: Restart Apache
+
+- include_tasks: ssl.yml
+
+- name: Установить расширение php-pgsql
+  apt:
+    name: php-pgsql
+    state: present
+    update_cache: true
+  become: true
+
+- name: Убедиться, что msmtprc принадлежит www-data
+  file:
+    path: /etc/msmtprc
+    owner: www-data
+    group: www-data
+    mode: '0600'
+  become: true

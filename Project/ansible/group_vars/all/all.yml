@@ -1,0 +1,2 @@
+ansible_user: vagrant
+replication_password: "postgres"

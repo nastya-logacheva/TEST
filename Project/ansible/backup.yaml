@@ -1,0 +1,5 @@
+- name: Setup daily PostgreSQL backups
+  hosts: db1
+  become: true
+  roles:
+    - backup

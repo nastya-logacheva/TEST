@@ -1,0 +1,31 @@
+- name: Setup backup script
+  copy:
+    dest: /usr/local/bin/backup.sh
+    content: |
+      #!/bin/bash
+      tar czf /backup/web-$(date +%F).tar.gz /var/www/html
+    mode: '0755'
+    
+- name: Ensure backup directory exists
+  file:
+    path: /var/backups/pgsql
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0755'
+
+- name: Create database backup script
+  copy:
+    dest: /usr/local/bin/pg_backup.sh
+    content: |
+      #!/bin/bash
+      su - postgres -c "pg_dump feedback > /var/backups/pgsql/feedback_$(date +%F).sql"
+    mode: '0755'
+
+- name: Create cron job for daily backups
+  cron:
+    name: "Daily PostgreSQL backup"
+    user: root
+    minute: "0"
+    hour: "2"
+    job: "/usr/local/bin/pg_backup.sh"

@@ -1,0 +1,30 @@
+- name: Установить UFW
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Включить UFW вручную
+  command: ufw --force enable
+  become: true
+
+- name: Разрешить SSH
+  command: ufw allow 22/tcp
+  become: true
+
+- name: Разрешить HTTP/HTTPS (только для web1)
+  command: ufw allow 80,443/tcp
+  when: inventory_hostname == 'web1'
+  become: true
+
+- name: Разрешить SMTP (только для mail1)
+  command: ufw allow 25,587/tcp
+  when: inventory_hostname == 'mail1'
+  become: true
+
+- name: Разрешить мониторинг (только для mon1)
+  command: ufw allow 9090,9100/tcp
+  when: inventory_hostname == 'mon1'
+  become: true
+

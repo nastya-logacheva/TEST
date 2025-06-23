@@ -1,0 +1,5 @@
+- name: Setup PostgreSQL master and slave
+  hosts: postgresql_master:postgresql_slave
+  become: true
+  roles:
+    - postgresql
