@@ -48,7 +48,7 @@ $ vagrant -v
 Vagrant 2.4.3
 $ ansible-playbook -i hosts rpm.yml
 ```
-Предварительно создаем файл *hosts*. \
+
 ---
 
 #### **Вывод**
